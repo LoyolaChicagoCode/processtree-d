@@ -11,11 +11,11 @@ struct proc {
 
 int main() {
 	char[] buf; // do not read into a string---way too slow!
-	proc[int] pmap;
+	string[int] pmap;
 	SList!(int)[int] tmap;
 
 	void printTree(int l, int i) {
-		writefln("%s%d: %s", replicate(" ", l), pmap[i].pid, pmap[i].cmd);
+		writefln("%s%d: %s", replicate(" ", l), i, pmap[i]);
 		if (i in tmap)
 			foreach (j ; tmap[i]) printTree(l + 1, j);
 	}
@@ -25,7 +25,7 @@ int main() {
 
 	while (stdin.readln(buf)) {
 		auto p = toProc(buf);
-		pmap[p.pid] = p;
+		pmap[p.pid] = p.cmd;
 		if (! (p.ppid in tmap)) tmap[p.ppid] = SList!(int)();
 		tmap[p.ppid].insert(p.pid);
 	}
